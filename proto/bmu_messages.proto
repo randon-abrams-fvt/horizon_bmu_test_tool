@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package bmu;
+
+message BmuStatus {
+  uint32 s_id = 1;
+  uint32 d_id = 2;
+
+  uint32 hsm_state = 3;
+
+  bool do0_request = 4;
+  bool do1_request = 5;
+  bool do2_request = 6;
+  bool do3_request = 7;
+  bool do4_request = 8;
+  bool do5_request = 9;
+  bool do6_request = 10;
+  bool do7_request = 11;
+
+  bool do0_status = 12;
+  bool do1_status = 13;
+  bool do2_status = 14;
+  bool do3_status = 15;
+  bool do4_status = 16;
+  bool do5_status = 17;
+  bool do6_status = 18;
+  bool do7_status = 19;
+}
+
+message BmuCommand {
+  uint32 s_id = 1;
+  uint32 d_id = 2;
+
+  bool hv_connect = 3;
+  bool hvil_closed = 4;
+}

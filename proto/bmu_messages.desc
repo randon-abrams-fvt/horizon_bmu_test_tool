@@ -1,0 +1,54 @@
+
+�
+bmu_messages.protobmu"�
+	BmuStatus
+s_id (
+RsId
+d_id (
+RdId
+	hsm_state (
+RhsmState
+do0_request (R
+do0Request
+do1_request (R
+do1Request
+do2_request (R
+do2Request
+do3_request (R
+do3Request
+do4_request (R
+do4Request
+do5_request	 (R
+do5Request
+do6_request
+ (R
+do6Request
+do7_request (R
+do7Request
+
+do0_status (R	do0Status
+
+do1_status
+ (R	do1Status
+
+do2_status (R	do2Status
+
+do3_status (R	do3Status
+
+do4_status (R	do4Status
+
+do5_status (R	do5Status
+
+do6_status (R	do6Status
+
+do7_status (R	do7Status"r
+
+BmuCommand
+s_id (
+RsId
+d_id (
+RdId
+
+hv_connect (R	hvConnect
+hvil_closed (R
+hvilClosedbproto3

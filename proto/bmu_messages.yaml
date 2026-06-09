@@ -1,0 +1,188 @@
+# BMU Messages — Runtime Configuration
+#
+# type_name format: <package>.<MessageName>  (must match .proto package + message name)
+#
+# Node IDs used in this configuration:
+#   9999 — App / test tool (client)
+#   1 — BMU (server)
+#
+# s_id default in each message is the *sender's* node ID.
+# d_id default is the *intended receiver's* node ID.
+
+messages:
+  bmu.BmuStatus:
+    meta:
+      cycle_time_ms: 100
+      enabled: true
+      decode: true
+      simulate: false
+
+    fields:
+      s_id:
+        value: 1
+        meta:
+          min: 0
+          max: 4294967295
+          enable: true
+
+      d_id:
+        value: 9999
+        meta:
+          min: 0
+          max: 4294967295
+          enable: true
+
+      hsm_state:
+        value: 0
+        meta:
+          min: 0
+          max: 4294967295
+          enable: true
+
+      do0_request:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do1_request:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do2_request:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do3_request:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do4_request:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do5_request:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do6_request:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do7_request:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do0_status:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do1_status:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do2_status:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do3_status:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do4_status:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do5_status:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do6_status:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      do7_status:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+  bmu.BmuCommand:
+    meta:
+      cycle_time_ms: 100
+      enabled: true
+      decode: true
+      simulate: true
+
+    fields:
+      s_id:
+        value: 9999
+        meta:
+          min: 0
+          max: 4294967295
+          enable: true
+
+      d_id:
+        value: 1
+        meta:
+          min: 0
+          max: 4294967295
+          enable: true
+
+      hv_connect:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true
+
+      hvil_closed:
+        value: false
+        meta:
+          min: 0
+          max: 1
+          enable: true

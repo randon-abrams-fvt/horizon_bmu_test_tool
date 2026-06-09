@@ -1,0 +1,14 @@
+[submodule "libs/message_runtime"]
+	path = libs/message_runtime
+	url = git@github.com:fvt-research/message_runtime.git
+[submodule "libs/proto_messages"]
+	path = libs/proto_messages
+	url = git@github.com:fvt-research/proto_messages.git
+    
+[submodule "libs/imgui"]
+	path = libs/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking
+[submodule "libs/implot"]
+	path = libs/implot
+	url = https://github.com/epezent/implot.git

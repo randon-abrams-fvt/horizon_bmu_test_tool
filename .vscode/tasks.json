@@ -1,0 +1,81 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "config",
+            "type": "shell",
+            "command": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64 && cmake --preset windows-${input:buildType}",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/d", "/c"]
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "clear": true
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64 && cmake --build --preset windows-${input:buildType} --parallel",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/d", "/c"]
+                }
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "clear": true
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "Remove-Item -Recurse -Force '${workspaceFolder}/build/${input:buildType}' -ErrorAction SilentlyContinue; Remove-Item -Recurse -Force '${workspaceFolder}/output/${input:buildType}' -ErrorAction SilentlyContinue; Write-Host 'Clean done.'",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "command": "./BmuTestTool.exe",
+            "options": {
+                "cwd": "${workspaceFolder}/output/${input:buildType}/bin"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "clear": false
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "buildType",
+            "description": "Build type",
+            "type": "pickString",
+            "options": [
+                "debug",
+                "release"
+            ],
+            "default": "debug"
+        }
+    ]
+}
