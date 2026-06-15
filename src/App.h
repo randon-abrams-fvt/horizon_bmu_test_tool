@@ -4,6 +4,7 @@
 #include "ui/CommandPanel.h"
 #include "ui/StatusPanel.h"
 #include "ui/TrafficPanel.h"
+#include "ui/Ttc2038XsPanel.h"
 
 #include <memory>
 #include <string>
@@ -22,6 +23,8 @@ class App
 
   private:
     void render_menu_bar();
+    void render_overview();
+    void render_components();
     void render_connect_window();
     void render_settings_window();
 
@@ -35,6 +38,7 @@ class App
     StatusPanel status_panel_;
     CommandPanel command_panel_;
     TrafficPanel traffic_panel_;
+    Ttc2038XsPanel ttc2038xs_panel_;
 
     // ── Connection dialog state
     // ───────────────────────────────────────────────

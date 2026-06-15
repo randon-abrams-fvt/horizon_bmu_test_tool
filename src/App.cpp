@@ -85,7 +85,42 @@ void App::render()
     // Push latest status snapshot to the status panel
     status_panel_.push_status(runtime_.latest_status());
 
-    // ── Single overview layout ──────────────────────────────────────────────
+    // ── Tab bar: Overview | Components ───────────────────────────────────────
+    if (ImGui::BeginTabBar("##main_tabs", ImGuiTabBarFlags_None))
+    {
+        if (ImGui::BeginTabItem("Overview"))
+        {
+            render_overview();
+            ImGui::EndTabItem();
+        }
+
+        if (ImGui::BeginTabItem("Components"))
+        {
+            render_components();
+            ImGui::EndTabItem();
+        }
+
+        ImGui::EndTabBar();
+    }
+
+    ImGui::End();
+
+    if (show_connect_window_)
+    {
+        render_connect_window();
+    }
+    if (show_settings_window_)
+    {
+        render_settings_window();
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Overview tab
+// ---------------------------------------------------------------------------
+
+void App::render_overview()
+{
     const float avail_h = ImGui::GetContentRegionAvail().y;
     constexpr float kSplitterThickness = 6.0f;
     const float upper_h = avail_h * upper_ratio_;
@@ -145,16 +180,22 @@ void App::render()
     ImGui::SeparatorText("Traffic");
     traffic_panel_.render();
     ImGui::EndChild();
+}
 
-    ImGui::End();
+// ---------------------------------------------------------------------------
+// Components tab
+// ---------------------------------------------------------------------------
 
-    if (show_connect_window_)
+void App::render_components()
+{
+    if (ImGui::BeginTabBar("##component_tabs", ImGuiTabBarFlags_None))
     {
-        render_connect_window();
-    }
-    if (show_settings_window_)
-    {
-        render_settings_window();
+        if (ImGui::BeginTabItem("TTC2038XS"))
+        {
+            ttc2038xs_panel_.render();
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
     }
 }
 

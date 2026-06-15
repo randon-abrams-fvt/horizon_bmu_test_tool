@@ -95,6 +95,12 @@ add_executable(BmuTestTool WIN32
     src/ui/StatusPanel.cpp
     src/ui/CommandPanel.cpp
     src/ui/TrafficPanel.cpp
+    src/ui/Ttc2038XsPanel.cpp
+    src/canopen/PcanBackend.cpp
+    src/canopen/CanOpenDefs.cpp
+    src/canopen/CanOpenClient.cpp
+    src/canopen/devices/Ttc2038Xs.cpp
+    src/canopen/devices/Ttc2038XsDevice.cpp
 )
 
 add_dependencies(BmuTestTool bmu_proto_desc)
