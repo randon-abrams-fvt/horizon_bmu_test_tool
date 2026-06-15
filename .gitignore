@@ -1,2 +1,6 @@
 build/
 output/
+
+# Local-only device reference material (datasheets, EDS, manuals).
+# Referenced by docs/code by path but not tracked in the repo.
+resources/
