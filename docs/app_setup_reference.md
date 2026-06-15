@@ -1,8 +1,28 @@
 # Reference Guide — Building a New Simulator App from this Template
 
-This document captures all the libraries, architecture patterns, UI conventions, and
-styling decisions used in the BMU Simulator so that a new app with a different
+This document captures the libraries, architecture patterns, UI conventions, and
+styling decisions used in this tool so that a new app with a different
 communication protocol can be built to match the same look and feel.
+
+> **Scope note.** This is an *aspirational template / pattern guide*. Some
+> section names below (e.g. example panel names, `third_party/`) describe a
+> generic blueprint and do **not** all match the current tree one-to-one. For
+> the **actual** structure of this application, read
+> [application_overview.md](application_overview.md). For the CANopen device
+> protocol, read [ttc2038xs_device_guide.md](ttc2038xs_device_guide.md). For why
+> things are the way they are, read [agent-decisions.md](agent-decisions.md).
+>
+> Key reality checks vs. this template:
+> - Language is **C++20** (not C++17). Configure presets are **`windows-debug`**
+>   and **`windows-release`** (see `CMakePresets.json`).
+> - Vendored libraries live under **`libs/`** (git submodules: `imgui`,
+>   `implot`, `message_runtime`, `proto_messages`), not `third_party/`.
+> - External packages (protobuf, boost, spdlog, yaml-cpp) come from **vcpkg**
+>   (`vcpkg.json`), bootstrapped by `cmake/windows_toolchain.cmake`.
+> - The real top-level UI is two tabs (**Overview**, **Components**), not the
+>   "Bus Monitor / Signals / Plots" example tabs used for illustration here.
+> - The protocol layer is the hand-written CANopen stack in `src/canopen/`,
+>   wrapping a PEAK PCAN adapter — see §15a below.
 
 ---
 
@@ -10,15 +30,17 @@ communication protocol can be built to match the same look and feel.
 
 | Layer | Technology | Notes |
 |---|---|---|
-| **Language** | C++17 | STL threading, `std::optional`, structured bindings |
-| **Build system** | CMake ≥ 3.20 with CMakePresets.json | Presets: `windows-Debug`, `windows-Release` |
+| **Language** | C++20 | STL threading, `std::optional`, structured bindings |
+| **Build system** | CMake ≥ 3.24 with CMakePresets.json | Presets: `windows-debug`, `windows-release` |
 | **GUI framework** | Dear ImGui (docking branch) | Immediate-mode UI, no layout files |
 | **Plotting** | ImPlot | ImGui-native; scrolling time-series |
 | **Renderer backend** | DirectX 11 + Win32 | `imgui_impl_win32.cpp` + `imgui_impl_dx11.cpp` |
 | **Font** | Roboto Mono Regular, 20 px | Loaded via `io.Fonts->AddFontFromFileTTF` |
 
-All third-party libraries live under `third_party/` and are compiled from source
-(no system-installed packages required, except the communication SDK if it is external).
+Vendored libraries live under `libs/` (git submodules) and are compiled from
+source. External packages are pulled via vcpkg. (The template sections below
+sometimes say `third_party/` — treat that as the generic placeholder for
+`libs/`.)
 
 ---
 
@@ -508,3 +530,41 @@ loader on startup — no file selection dialog required.
 | Settings window | — |
 | Bus Monitor Panel (only column names change) | — |
 | Plot Panel (protocol-agnostic already) | — |
+
+---
+
+## 15a. How this Template Maps to the Real CANopen Implementation
+
+The generic `IMyInterface` / `MyFrame` / `MyBus` abstractions above are realized
+concretely in `src/canopen/`. Use this mapping when reading the code:
+
+| Template concept | Real type | File |
+|---|---|---|
+| `MyFrame` | `CanFrame` | `src/canopen/CanFrame.h` |
+| `IMyInterface` (hardware) | `PcanChannel` (PCANBasic, runtime-loaded DLL) | `src/canopen/PcanBackend.*` |
+| `MyBus` (RX thread + queue) | `CanOpenClient` (worker thread, SDO state machine, traffic stats) | `src/canopen/CanOpenClient.*` |
+| Protocol constants | `CanOpenDefs` (COB-IDs, NMT, SDO) | `src/canopen/CanOpenDefs.h` |
+| Schema/model | curated OD table + pin model in the device layer | `src/canopen/devices/Ttc2038Xs*.{h,cpp}` |
+| Device abstraction | `Ttc2038XsDevice` (SDO job sequencer, typed API) | `src/canopen/devices/Ttc2038XsDevice.*` |
+| Protocol panel | `Ttc2038XsPanel` (Status/Control/Configure/Pins/Advanced/Traffic) | `src/ui/Ttc2038XsPanel.cpp` |
+
+Notable deviations from the generic template that are intentional for CANopen:
+
+- **One in-flight request, not free-running TX.** CANopen SDO allows a single
+  outstanding transfer per server. `CanOpenClient` enforces this; the device
+  layer queues work and services one item per `poll()`. There is no per-frame
+  "drain all RX into all panels" fan-out like the template's `pushFrame`.
+- **Control vs Monitor mode.** The adapter can open listen-only (passive) so the
+  tool observes a live bus without ACKing/transmitting. The connect dialog
+  therefore has a mode selector, not just port/baud.
+- **No EDS parsing at runtime.** Unlike the template's "embed the schema"
+  suggestion, the OD subset used by the UI is hand-curated in code; the full EDS
+  (`resources/Ttc2038Xs.eds`) and HTML reference (`resources/Ttc2038Xs.html`)
+  are documentation inputs only.
+- **Device-specific I/O is pin-mode driven.** The Control tab is generated from
+  each pin's configured Pin Mode (see the device guide), rather than a fixed set
+  of signals.
+
+For the protocol details a new driver would need, see
+[ttc2038xs_device_guide.md](ttc2038xs_device_guide.md).
+
